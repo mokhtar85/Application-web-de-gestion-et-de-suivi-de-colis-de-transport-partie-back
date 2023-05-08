@@ -30,19 +30,18 @@ public class Clientservice implements IClientService {
 		return clientrep.save(client);
 	}
 	@Override
-	public String addClientWithTestmail(Client client) {
+	public Client addClientWithTestmail(Client client) {
 		// TODO Auto-generated method stub
-		String ch="";
+		
 		if (clientrep.existsByEmail(client.getEmail()) ) {
-			ch="Email already exists please enter another one";
-			System.out.println(ch);
+			return null;
 		}
 		else {
-			clientrep.save(client);
-			ch="user added succusfully";
-			System.out.println(ch);
+			 return clientrep.save(client);
+			
+			
 		}
-		return ch ;
+		
 		
 	}
 	@Override
@@ -61,18 +60,19 @@ public class Clientservice implements IClientService {
 		return ch;
 		
 	}
-	public String deleteUser(Long iduser) {
+	public Boolean deleteUser(Long iduser) {
 		
 		// TODO Auto-generated method stub
-		String ch="";
+		
 		if(clientrep.existsById(iduser)) {
 		 clientrep.deleteById(iduser);
-		 ch="user deleted succussfully !";
+		 return true;
 		}
 		else {
-			 ch="deleting not possible, user does'nt exist !";
+			
+			 return false;
 		}
-		return ch;
+		
 	}
 	public List<Client> findAllClientbyuserName(String ch) {
 		// TODO Auto-generated method stub
@@ -114,6 +114,19 @@ public class Clientservice implements IClientService {
 		      return clientrep.save(user);
 		   
 		  }
+		  public Long getNombreClients() {
+		        return clientrep.count();
+		    }
+		@Override
+		public Client fetchClientByEmailId(String email) {
+			// TODO Auto-generated method stub
+			return clientrep.findByEmail(email);
+		}
+		public Client fetchClientByEmailIdAndPassword(String email,String password) {
+			// TODO Auto-generated method stub
+			return clientrep.findByEmailAndPassword(email,password);
+		}
+	
 		}
 		
 		

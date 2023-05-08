@@ -14,6 +14,7 @@ public class Transporteur  {
 	private Long id_user;
 	private String firstName;
 	private String lastName;
+	private String userName;
 	private String phone;
 	private String city;
 	private String adress;
@@ -23,12 +24,13 @@ public class Transporteur  {
 	private String cin;
 	private String confirmPassword;
 	
-	public Transporteur(Long id_user, String firstName, String lastName, String phone, String city, String adress,
+	public Transporteur(Long id_user, String firstName, String lastName, String userName, String phone, String city, String adress,
 			String password,String email,String nImmatricualtion,String cin, String confirmPassword ) {
 		super();
 		this.id_user = id_user;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.userName = userName;
 		this.phone = phone;
 		this.city = city;
 		this.adress = adress;
@@ -130,5 +132,13 @@ public class Transporteur  {
 
 	public void setCin(String cin) {
 		this.cin = cin;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 }

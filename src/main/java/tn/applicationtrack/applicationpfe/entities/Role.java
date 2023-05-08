@@ -24,15 +24,15 @@ public class Role {
 
 	@OneToMany(mappedBy = "Roleclient")
 	private List<Client> listClient = new ArrayList<>();
+	public Role() {
+		// Constructeur par défaut
+	}
 	public Role(Long idRole, Typerole type) {
 		super();
 		this.idRole = idRole;
 		this.type = type;
 	}
-	public Role() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	
 	public Long getIdRole() {
 		return idRole;
 	}

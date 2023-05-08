@@ -1,7 +1,7 @@
 package tn.applicationtrack.applicationpfe.controlleur;
 
 import java.util.List;
-import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import tn.applicationtrack.applicationpfe.entities.Client;
@@ -30,14 +31,21 @@ public Client addclientRole(@RequestBody Client client, @PathVariable("idRole") 
 	return clientserv.addClient(client, idRole)	;
 }
 	@PostMapping(value="/addClientWithoutRole")
-	public Client addClientWithoutRole(@RequestBody Client client) {
+	public Client addClientWithoutRole(@RequestBody Client client) throws Exception {
 		
+		String tempEmailId=client.getEmail();
+		if(tempEmailId!=null && !"".equals(tempEmailId)) {
+			Client clientobj = clientserv.fetchClientByEmailId(tempEmailId);
+			if(clientobj!=null) {
+				throw new Exception("user with this"+tempEmailId+ "already exists");
+			}
+		}
 		
 		return clientserv.addClientWithoutRole(client)	;
 	
 }
 	@PostMapping(value="/addClientWithTestmail")
-	public String addClientWithTestmail(@RequestBody Client client) {
+	public Client addClientWithTestmail(@RequestBody Client client) {
 		
 		
 		return clientserv.addClientWithTestmail(client)	;
@@ -51,11 +59,17 @@ public Client addclientRole(@RequestBody Client client, @PathVariable("idRole") 
 	
 }
 	@DeleteMapping(value="/deleteUser/{iduser}")
-	public String deleteUser(@PathVariable(name= "iduser") Long iduser) {
+	public ResponseEntity<Long> deleteUser(@PathVariable(name= "iduser") Long iduser) {
 		
 		
-		return clientserv.deleteUser(iduser);
-	
+		Boolean usrDeleted= clientserv.deleteUser(iduser);
+		if(usrDeleted) {
+			return ResponseEntity.ok().body(iduser);
+		}
+		else {
+			return ResponseEntity.badRequest().body(iduser);
+		}
+		
 }
 	@GetMapping(value="/findallClientByUsername/{ch}")
 	public List<Client> findClientByUsername(@PathVariable(name = "ch") String ch) {
@@ -73,5 +87,26 @@ public Client addclientRole(@RequestBody Client client, @PathVariable("idRole") 
 		return  clientserv.updateUser(idUser, updatedUser);
 	   
 	  }
+	 @GetMapping("/nombre")
+	 public ResponseEntity<Long> getNombreClients() {
+	        long nombreClients = clientserv.getNombreClients();
+	        return ResponseEntity.ok().body(nombreClients);
+	    }
+	 @PostMapping("/loginUsr")
+	 public Client loginUser(@RequestBody Client client) throws Exception {
+		 String tempEmail = client.getEmail();
+		 String tempPassword = client.getPassword();
+		 Client clientObj = null;
+		 if(tempEmail != null && tempPassword != null ) {
+			clientObj=clientserv.fetchClientByEmailIdAndPassword(tempEmail, tempPassword);
+		 }
+		 if(clientObj==null) {
+			 throw new Exception("bad informations");
+		 }
+		 return clientObj;
+		 
+	 }
+	 
+
 	 
 }
