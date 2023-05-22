@@ -13,17 +13,16 @@ import tn.applicationtrack.applicationpfe.repository.Clientrreposiotry;
 import tn.applicationtrack.applicationpfe.repository.RoleRepository;
 @Service
 public class Clientservice implements IClientService {
-	@Autowired
-	RoleRepository rolerep; 
+	
 	@Autowired
 	Clientrreposiotry clientrep;
-	@Override
-	public Client addClient(Client client, Long idRole) {
+	/*@Override
+	/*public Client addClient(Client client, Long idRole) {
 		// TODO Auto-generated method stub
 		Role role = rolerep.findById(idRole).get();
 	    client.setRoleclient(role);
 		return clientrep.save(client);
-	}
+	}*/
 	@Override
 	public Client addClientWithoutRole(Client client) {
 		// TODO Auto-generated method stub
@@ -117,11 +116,11 @@ public class Clientservice implements IClientService {
 		  public Long getNombreClients() {
 		        return clientrep.count();
 		    }
-		@Override
+		/*@Override
 		public Client fetchClientByEmailId(String email) {
 			// TODO Auto-generated method stub
 			return clientrep.findByEmail(email);
-		}
+		}*/
 		public Client fetchClientByEmailIdAndPassword(String email,String password) {
 			// TODO Auto-generated method stub
 			return clientrep.findByEmailAndPassword(email,password);

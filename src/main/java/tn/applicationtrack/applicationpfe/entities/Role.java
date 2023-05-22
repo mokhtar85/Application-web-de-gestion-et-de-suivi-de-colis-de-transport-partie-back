@@ -22,8 +22,7 @@ public class Role {
 	private Typerole type;
 	
 
-	@OneToMany(mappedBy = "Roleclient")
-	private List<Client> listClient = new ArrayList<>();
+	
 	public Role() {
 		// Constructeur par défaut
 	}
