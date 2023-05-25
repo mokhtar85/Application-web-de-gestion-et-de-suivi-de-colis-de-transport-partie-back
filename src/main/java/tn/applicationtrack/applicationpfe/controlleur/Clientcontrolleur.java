@@ -20,7 +20,7 @@ import tn.applicationtrack.applicationpfe.entities.Client;
 import tn.applicationtrack.applicationpfe.service.Clientservice;
 @CrossOrigin(origins="http://localhost:4200")
 @RestController
-@RequestMapping("/api/v1/clientcrud")
+@RequestMapping("/api/v1/auth")
 public class Clientcontrolleur {
 	@Autowired 
 	Clientservice clientserv;
