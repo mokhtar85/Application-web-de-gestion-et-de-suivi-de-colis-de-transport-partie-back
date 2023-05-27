@@ -28,7 +28,7 @@ public class Colis {
  private String adresseExpedition;
  private String adresseLivraison;
  private String taille;
- private String Poid;
+ private String poid;
  @DateTimeFormat(pattern = "yyyy-MM-dd")
  private LocalDate date;
  private Long numberProduct;
@@ -50,7 +50,7 @@ public Colis(String adresseExpedition, String adresseLivraison, String taille, S
 	this.adresseExpedition = adresseExpedition;
 	this.adresseLivraison = adresseLivraison;
 	this.taille = taille;
-	Poid = poid;
+	this.poid = poid;
 	this.date = date;
 	this.numberProduct = numberProduct;
 	this.remarques = remarques;
@@ -80,10 +80,10 @@ public void setTaille(String taille) {
 	this.taille = taille;
 }
 public String getPoid() {
-	return Poid;
+	return poid;
 }
 public void setPoid(String poid) {
-	Poid = poid;
+	this.poid = poid;
 }
 public LocalDate getDate() {
 	return date;
