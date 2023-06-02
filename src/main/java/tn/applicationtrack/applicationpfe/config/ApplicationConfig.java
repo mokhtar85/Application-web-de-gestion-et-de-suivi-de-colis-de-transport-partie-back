@@ -13,16 +13,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import lombok.RequiredArgsConstructor;
+import tn.applicationtrack.applicationpfe.repository.Adminrepository;
 import tn.applicationtrack.applicationpfe.repository.Clientrreposiotry;
+import tn.applicationtrack.applicationpfe.service.AdminServiceImpl;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 	private final Clientrreposiotry clientRepository;
+	private final Adminrepository adminRepository;
 	@Bean
 	public 	UserDetailsService  userDetailsService () {
-		return (username) -> clientRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Client not found"));
-	}
+		return new CustomUserDetailsService(clientRepository, adminRepository);
+		}
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -38,5 +41,10 @@ public class ApplicationConfig {
 	public PasswordEncoder passwordEncoder() {
 		// TODO Auto-generated method stub
 		return new BCryptPasswordEncoder();
+	}
+	@Bean
+	public AdminServiceImpl adminService() {
+	    // Retourner une instance de votre service AdminService
+	    return new AdminServiceImpl(adminRepository);
 	}
 }

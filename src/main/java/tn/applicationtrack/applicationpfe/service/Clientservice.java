@@ -4,15 +4,21 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
+import lombok.RequiredArgsConstructor;
 import tn.applicationtrack.applicationpfe.entities.Client;
 import tn.applicationtrack.applicationpfe.entities.Role;
 import tn.applicationtrack.applicationpfe.repository.Clientrreposiotry;
 import tn.applicationtrack.applicationpfe.repository.RoleRepository;
 @Service
+@RequiredArgsConstructor
 public class Clientservice implements IClientService {
+	private  final PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	Clientrreposiotry clientrep;
@@ -125,7 +131,45 @@ public class Clientservice implements IClientService {
 			// TODO Auto-generated method stub
 			return clientrep.findByEmailAndPassword(email,password);
 		}
-	
+		@Override
+		 public Client updateClient( Client updatedClient) {
+	        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	        if (authentication.getPrincipal() instanceof Client) {
+	            Client existingClient = (Client) authentication.getPrincipal();
+	            existingClient.setUserName(updatedClient.getUserName());
+	            existingClient.setLastName(updatedClient.getLastName());
+	            existingClient.setFirstName(updatedClient.getFirstName());
+	            existingClient.setPhone(updatedClient.getPhone());
+	            existingClient.setAdress(updatedClient.getAdress());
+	            existingClient.setCity(updatedClient.getCity());
+
+	            // Vérifier si un nouveau mot de passe est fourni
+	            if (updatedClient.getPassword() != null) {
+	                // Crypter le nouveau mot de passe
+	                String hashedPassword = passwordEncoder.encode(updatedClient.getPassword());
+	                existingClient.setPassword(hashedPassword);
+	            }
+	            if (updatedClient.getConfirmPassword() != null) {
+	                // Crypter le nouveau mot de passe
+	                String hashedConfirmPassword = passwordEncoder.encode(updatedClient.getConfirmPassword());
+	                existingClient.setConfirmPassword(hashedConfirmPassword);
+	            }
+
+	            return clientrep.save(existingClient);
+	        }
+
+	        throw new IllegalStateException("Client non authentifié.");
+	    }
+		@Override
+		public Client getCurrentClient() {
+			// TODO Auto-generated method stub
+			 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		        if (authentication.getPrincipal() instanceof Client) {
+		        	   return (Client) authentication.getPrincipal();
+		        }
+		        return null;
+		}
+		
 		}
 		
 		

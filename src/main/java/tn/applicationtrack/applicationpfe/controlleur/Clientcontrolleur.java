@@ -108,6 +108,14 @@ public Client addclientRole(@RequestBody Client client, @PathVariable("idRole") 
 		 return clientObj;
 		 
 	 }
+	 @PutMapping(value="/updateClient")
+	  public Client updateUser( @RequestBody Client updatedUser) {
+		return  clientserv.updateClient( updatedUser);
+	  }
+	 @GetMapping(value="getCureentClient")
+		public Client getClientById(){
+			return clientserv.getCurrentClient();
+		}
 	 
 
 	 

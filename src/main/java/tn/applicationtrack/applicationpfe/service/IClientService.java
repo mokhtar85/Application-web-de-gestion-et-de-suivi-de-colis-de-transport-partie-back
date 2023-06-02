@@ -18,4 +18,6 @@ public Client updateUser(Long idUser, Client updatedUser);
 public Long getNombreClients();
 /*public Client fetchClientByEmailId(String email);*/
 public Client fetchClientByEmailIdAndPassword(String email,String password);
+public Client updateClient( Client updatedClient);
+public Client getCurrentClient();
 }
