@@ -18,6 +18,7 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -30,6 +31,7 @@ public class Colis {
  private String adresseLivraison;
  private String taille;
  private String poid;
+ private boolean acceptee;
  @DateTimeFormat(pattern = "yyyy-MM-dd")
  private LocalDate date;
  private Long numberProduct;
@@ -46,7 +48,7 @@ public Colis() {
 	// TODO Auto-generated constructor stub
 }
 public Colis(String adresseExpedition, String adresseLivraison, String taille, String poid, LocalDate date,
-		Long numberProduct, String remarques) {
+		Long numberProduct, String remarques,boolean acceptee) {
 	super();
 	this.adresseExpedition = adresseExpedition;
 	this.adresseLivraison = adresseLivraison;
@@ -55,6 +57,7 @@ public Colis(String adresseExpedition, String adresseLivraison, String taille, S
 	this.date = date;
 	this.numberProduct = numberProduct;
 	this.remarques = remarques;
+	this.acceptee=acceptee;
 }
 public Long getIdCmd() {
 	return idCmd;
@@ -120,5 +123,11 @@ public void setClient(Client client) {
 public void addProduct(Product product) {
     produits.add(product);
     product.setColis(this);
+}
+public boolean isAcceptee() {
+	return acceptee;
+}
+public void setAcceptee(boolean acceptee) {
+	this.acceptee = acceptee;
 }
 }

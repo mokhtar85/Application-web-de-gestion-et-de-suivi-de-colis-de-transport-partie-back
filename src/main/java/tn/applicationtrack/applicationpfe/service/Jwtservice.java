@@ -16,6 +16,7 @@
 	import io.jsonwebtoken.security.Keys;
 	import tn.applicationtrack.applicationpfe.entities.Admin;
 	import tn.applicationtrack.applicationpfe.entities.Client;
+import tn.applicationtrack.applicationpfe.entities.Transporteur;
 	
 	@Service
 	public class Jwtservice {
@@ -35,7 +36,10 @@
 		    } else if (userDetails instanceof Admin) {
 		        Admin admin = (Admin) userDetails;
 		        claims.put("role", admin.getRoleAdmin().name());
-		    }; // Ajouter le claim "userType" au Map extraClaims
+		    }  else if  (userDetails instanceof Transporteur) {
+		        Transporteur transporteur = (Transporteur) userDetails;
+		        claims.put("role", transporteur.getRoletransporteur().name());
+		    };
 	
 		 return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis()+1000*60*24)).signWith(getSigninKey(),SignatureAlgorithm.HS256).compact();
 		 }

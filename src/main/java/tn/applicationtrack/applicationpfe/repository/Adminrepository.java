@@ -10,5 +10,5 @@ import tn.applicationtrack.applicationpfe.entities.Admin;
 @Repository
 public interface Adminrepository extends JpaRepository<Admin, Long> {
 	public Optional<Admin> findByEmail(String email);
-
+	public Optional<Admin> findById(Long id_Admin);
 }

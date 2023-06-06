@@ -11,4 +11,5 @@ import tn.applicationtrack.applicationpfe.entities.Colis;
 @Repository
 public interface ColisRepository extends JpaRepository<Colis, Long> {
 	public List<Colis> findByClient(Client client);
+	List<Colis> findByAccepteeTrue();
 }

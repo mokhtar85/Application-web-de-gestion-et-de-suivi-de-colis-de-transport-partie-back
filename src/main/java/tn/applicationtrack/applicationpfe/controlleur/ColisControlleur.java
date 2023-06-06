@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import tn.applicationtrack.applicationpfe.entities.AffectationColis;
 import tn.applicationtrack.applicationpfe.entities.Colis;
 import tn.applicationtrack.applicationpfe.entities.Product;
 import tn.applicationtrack.applicationpfe.repository.ProduitRepository;
+import tn.applicationtrack.applicationpfe.service.AffectationColisService;
 import tn.applicationtrack.applicationpfe.service.ColisService;
 @CrossOrigin(origins="http://localhost:4200")
 @RestController
@@ -28,6 +30,8 @@ import tn.applicationtrack.applicationpfe.service.ColisService;
 public class ColisControlleur {
 	@Autowired 
 	ColisService Commandserv; 
+	@Autowired 
+	AffectationColisService affectationColisService; 
 @PostMapping(value="/addCommand")
 public Colis addCommand (@RequestBody Colis cmd) {
 	return Commandserv.addCommand(cmd);
@@ -75,5 +79,45 @@ public ResponseEntity<Colis> soumettreColis(Authentication authentication, @Requ
 	Colis nouveauColis = Commandserv.soumettreColis(colis);
 	return ResponseEntity.ok(nouveauColis);
 }
+@PostMapping("/colis/{colisId}/transporteur/{transporteurId}")
+public ResponseEntity<AffectationColis> affecterColis(
+        @PathVariable("colisId") List<Long> colisIds,
+        @PathVariable("transporteurId") Long transporteurId) {
 
+    AffectationColis affectationColis = affectationColisService.affecterColis(transporteurId, colisIds);
+
+    if (affectationColis == null) {
+        // Gérer le cas où l'affectation a échoué (transporteur non trouvé, colis non trouvés, liste de colis vide, etc.)
+        return ResponseEntity.badRequest().build();
+    }
+
+    // Affectation réussie
+    return ResponseEntity.ok(affectationColis);
 }
+@GetMapping("/getColisAffecter")
+public ResponseEntity<List<Colis>>  getColisAffected(){
+	List<Colis> colisAffected = Commandserv.getColisAffectesAuTransporteurConnecte();
+	 return ResponseEntity.ok(colisAffected);
+}
+
+@PostMapping("/accepter/{id}")
+public Colis accepterCommande(@PathVariable("id") Long id) {
+    return Commandserv.accepterCommande(id);
+}
+
+@GetMapping("/getColsiAcceptes")
+public List<Colis> getColisAcceptes() {
+    return Commandserv.getColisAcceptes();
+}
+@DeleteMapping("/colis/{colisId}")
+public ResponseEntity<String> supprimerColisPourTransporteur(@PathVariable Long colisId) {
+   
+    	Commandserv.supprimerColisParId(colisId);
+        return ResponseEntity.ok("Colis supprimé avec succès pour le transporteur.");
+    
+     
+    }
+}
+
+
+

@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import lombok.RequiredArgsConstructor;
 import tn.applicationtrack.applicationpfe.entities.Admin;
 import tn.applicationtrack.applicationpfe.entities.Client;
+import tn.applicationtrack.applicationpfe.entities.Transporteur;
 import tn.applicationtrack.applicationpfe.response.AuthenticationResponse;
 import tn.applicationtrack.applicationpfe.service.Jwtservice;
 
@@ -55,6 +56,13 @@ public class JwtAuthentificationFilter extends OncePerRequestFilter {
 					SecurityContextHolder.getContext().setAuthentication(authToken);
 				} else if (userDetails instanceof Admin) {
 					Admin admin = (Admin) userDetails;
+					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+							userDetails, null, userDetails.getAuthorities());
+					authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+					SecurityContextHolder.getContext().setAuthentication(authToken);
+				}
+				else if (userDetails instanceof Transporteur) {
+					Transporteur transporteur = (Transporteur) userDetails;
 					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
 							userDetails, null, userDetails.getAuthorities());
 					authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

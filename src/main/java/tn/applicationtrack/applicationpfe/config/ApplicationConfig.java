@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import tn.applicationtrack.applicationpfe.repository.Adminrepository;
 import tn.applicationtrack.applicationpfe.repository.Clientrreposiotry;
+import tn.applicationtrack.applicationpfe.repository.Transporteurrepository;
 import tn.applicationtrack.applicationpfe.service.AdminServiceImpl;
 
 @Configuration
@@ -22,9 +23,10 @@ import tn.applicationtrack.applicationpfe.service.AdminServiceImpl;
 public class ApplicationConfig {
 	private final Clientrreposiotry clientRepository;
 	private final Adminrepository adminRepository;
+	private final Transporteurrepository transporteurRepository;
 	@Bean
 	public 	UserDetailsService  userDetailsService () {
-		return new CustomUserDetailsService(clientRepository, adminRepository);
+		return new CustomUserDetailsService(clientRepository, adminRepository,transporteurRepository);
 		}
 	@Bean
 	public AuthenticationProvider authenticationProvider() {

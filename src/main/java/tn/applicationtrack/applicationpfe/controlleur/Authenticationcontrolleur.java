@@ -13,6 +13,7 @@ import tn.applicationtrack.applicationpfe.entities.Admin;
 import tn.applicationtrack.applicationpfe.entities.Client;
 import tn.applicationtrack.applicationpfe.requests.AuthenticationRequest;
 import tn.applicationtrack.applicationpfe.requests.RegisterRequest;
+import tn.applicationtrack.applicationpfe.requests.RegisterRequestTransporteur;
 import tn.applicationtrack.applicationpfe.response.AuthenticationResponse;
 import tn.applicationtrack.applicationpfe.service.AuthenticationService;
 
@@ -28,6 +29,10 @@ public class Authenticationcontrolleur {
 	@PostMapping("/register")
 	public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request){
 		return ResponseEntity.ok(authenticationService.register(request));
+	}
+	@PostMapping("/registerTransporteur")
+	public ResponseEntity<AuthenticationResponse> registerTransporteur(@RequestBody RegisterRequestTransporteur request){
+		return ResponseEntity.ok(authenticationService.registerTrasporteur(request));
 	}
 	/*@PostMapping("/authenticate")
 	public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){

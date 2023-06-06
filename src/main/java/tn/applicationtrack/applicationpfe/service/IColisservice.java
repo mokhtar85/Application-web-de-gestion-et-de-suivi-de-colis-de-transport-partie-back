@@ -13,5 +13,7 @@ public interface IColisservice {
 	public Colis updateCommand(Long id,Colis updatedCommand);
 	public Boolean deleteCommand(Long id);
 	public Long getNumbercommand();
-	
+	 public List<Colis> getColisAffectesAuTransporteurConnecte();
+	 public Colis accepterCommande(Long id) ;
+	 public List<Colis> getColisAcceptes();
 }

@@ -1,5 +1,6 @@
 package tn.applicationtrack.applicationpfe.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,9 +12,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import tn.applicationtrack.applicationpfe.entities.AffectationColis;
 import tn.applicationtrack.applicationpfe.entities.Client;
 import tn.applicationtrack.applicationpfe.entities.Colis;
 import tn.applicationtrack.applicationpfe.entities.Product;
+import tn.applicationtrack.applicationpfe.entities.Transporteur;
+import tn.applicationtrack.applicationpfe.repository.AffectationColisRepository;
 import tn.applicationtrack.applicationpfe.repository.Clientrreposiotry;
 import tn.applicationtrack.applicationpfe.repository.ColisRepository;
 import tn.applicationtrack.applicationpfe.repository.ProduitRepository;
@@ -25,6 +29,8 @@ public class ColisService implements IColisservice {
 	Clientrreposiotry clientRep;
 	@Autowired
 	ProduitRepository productRep;
+	@Autowired
+	AffectationColisRepository affectationColisRepository;
 	public Colis addCommand(Colis cmd) {
 		// TODO Auto-generated method stub
 		return cmdrep.save(cmd);
@@ -98,7 +104,59 @@ public class ColisService implements IColisservice {
 	    // Gérer le cas où le client n'est pas authentifié correctement
 	    throw new IllegalStateException("Client non authentifié.");
 	}
+	@Override
+	public List<Colis> getColisAffectesAuTransporteurConnecte() {
+		// TODO Auto-generated method stub
+		  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	        if (authentication.getPrincipal() instanceof Transporteur) {
+	            Transporteur transporteur = (Transporteur) authentication.getPrincipal();
+	            List<AffectationColis> affectationColisList = affectationColisRepository.findAffectationColisByTransporteurId(transporteur.getId_user());
+	            List<Colis> colisList = new ArrayList<>();
+	            for (AffectationColis affectationColis : affectationColisList) {
+	                colisList.addAll(affectationColis.getColisList());
+	            }
+	            return colisList;
+	        }
+	        return new ArrayList<>();
+	}
+	@Override
+	public Colis accepterCommande(Long id) {
+		// TODO Auto-generated method stub
+		Optional<Colis> optionalColis = cmdrep.findById(id);
 
+	    if (optionalColis.isPresent()) {
+	        Colis colis = optionalColis.get();
+	        // Mettez à jour le champ "acceptee" du colis
+	        colis.setAcceptee(true);
+
+	        // Enregistrez le colis mis à jour dans la base de données
+	        return cmdrep.save(colis);
+	    } else {
+	        // Gérer le cas où le colis n'est pas trouvé
+	        throw new IllegalArgumentException("Colis non trouvé pour l'ID : " + id);
+	    }
+	}
+	 public List<Colis> getColisAcceptes() {
+	        return cmdrep.findByAccepteeTrue();
+	    }
+	 public void supprimerColisParId(Long colisId) {
+		    // Récupérer l'affectation du colis pour le transporteur
+		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	        if (authentication.getPrincipal() instanceof Transporteur) {
+	            Transporteur transporteur = (Transporteur) authentication.getPrincipal();
+	            Long transporteurId = transporteur.getId_user();
+		    AffectationColis affectationColis = affectationColisRepository.findByTransporteurIdAndColisListId(transporteurId, colisId);
+
+		    if (affectationColis != null) {
+		        // Supprimer le colis de la liste des colis de l'affectation
+		        List<Colis> colisList = affectationColis.getColisList();
+		        colisList.removeIf(colis -> colis.getIdCmd().equals(colisId));
+
+		        // Enregistrer les modifications dans la base de données
+		        affectationColisRepository.save(affectationColis);
+		    }
+		}
+	 }
 }
 
 	

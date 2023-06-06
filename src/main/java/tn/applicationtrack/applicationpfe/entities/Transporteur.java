@@ -1,16 +1,27 @@
 package tn.applicationtrack.applicationpfe.entities;
 
+import java.util.Collection;
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name="transporteur")
-public class Transporteur  {
+public class Transporteur implements UserDetails  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	
 	private Long id_user;
 	private String firstName;
 	private String lastName;
@@ -23,11 +34,44 @@ public class Transporteur  {
 	private String nImmatricualtion;
 	private String cin;
 	private String confirmPassword;
+	private String licenseNumber;
+	private String vehicleType;
+	@Enumerated(EnumType.STRING)
+	private Typerole Roletransporteur;
 	
-	public Transporteur(Long id_user, String firstName, String lastName, String userName, String phone, String city, String adress,
-			String password,String email,String nImmatricualtion,String cin, String confirmPassword ) {
+    public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
+
+	public Typerole getRoletransporteur() {
+		return Roletransporteur;
+	}
+
+	public void setRoletransporteur(Typerole roletransporteur) {
+		Roletransporteur = roletransporteur;
+	}
+
+	public List<AffectationColis> getAffectations() {
+		return affectations;
+	}
+
+	public void setAffectations(List<AffectationColis> affectations) {
+		this.affectations = affectations;
+	}
+
+	@OneToMany(mappedBy = "transporteur")
+    private List<AffectationColis> affectations;
+	
+	
+	
+	public Transporteur(String firstName, String lastName, String userName, String phone, String city, String adress,
+			String password, String email, String nImmatricualtion, String cin, String confirmPassword,
+			String licenseNumber, String vehicleType, List<AffectationColis> affectations,Typerole Roletransporteur) {
 		super();
-		this.id_user = id_user;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.userName = userName;
@@ -36,11 +80,15 @@ public class Transporteur  {
 		this.adress = adress;
 		this.password = password;
 		this.email = email;
-		this.nImmatricualtion=nImmatricualtion;
-		this.cin=cin;
-		this.confirmPassword=confirmPassword;
+		this.nImmatricualtion = nImmatricualtion;
+		this.cin = cin;
+		this.confirmPassword = confirmPassword;
+		this.licenseNumber = licenseNumber;
+		this.vehicleType = vehicleType;
+		this.affectations = affectations;
+		this.Roletransporteur=Roletransporteur;
 	}
-	
+
 	public Transporteur() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -140,5 +188,57 @@ public class Transporteur  {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getLicenseNumber() {
+		return licenseNumber;
+	}
+
+	public void setLicenseNumber(String licenseNumber) {
+		this.licenseNumber = licenseNumber;
+	}
+
+	public String getVehicleType() {
+		return vehicleType;
+	}
+
+	public void setVehicleType(String vehicleType) {
+		this.vehicleType = vehicleType;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return List.of(new SimpleGrantedAuthority(Roletransporteur.name())) ;
+	}
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 }
