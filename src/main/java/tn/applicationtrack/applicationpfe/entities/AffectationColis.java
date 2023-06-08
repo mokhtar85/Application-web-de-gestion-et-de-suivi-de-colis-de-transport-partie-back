@@ -34,6 +34,7 @@ public class AffectationColis {
 
 	@OneToMany
 	 @JsonManagedReference
+	 @JoinColumn(name = "affectation_id") // Spécifie la colonne de jointure
 	private List<Colis> colisList;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateAffectation;
@@ -46,7 +47,7 @@ public class AffectationColis {
 	
 		this.transporteur = transporteur;
 		this.colisList = colisList;
-		this.dateAffectation = dateAffectation;
+		this.dateAffectation = dateAffectation;	
 	}
 	public Admin getAdmin() {
 		return admin;

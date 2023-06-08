@@ -65,6 +65,7 @@ public class Clientservice implements IClientService {
 		return ch;
 		
 	}
+	
 	public Boolean deleteUser(Long iduser) {
 		
 		// TODO Auto-generated method stub

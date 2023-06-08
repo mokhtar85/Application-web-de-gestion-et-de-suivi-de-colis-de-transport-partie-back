@@ -1,6 +1,7 @@
 package tn.applicationtrack.applicationpfe.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,7 +111,7 @@ public class ColisService implements IColisservice {
 		  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	        if (authentication.getPrincipal() instanceof Transporteur) {
 	            Transporteur transporteur = (Transporteur) authentication.getPrincipal();
-	            List<AffectationColis> affectationColisList = affectationColisRepository.findAffectationColisByTransporteurId(transporteur.getId_user());
+	            List<AffectationColis> affectationColisList = affectationColisRepository.findByTransporteurAndColisList_AccepteeFalse(transporteur);
 	            List<Colis> colisList = new ArrayList<>();
 	            for (AffectationColis affectationColis : affectationColisList) {
 	                colisList.addAll(affectationColis.getColisList());
@@ -136,9 +137,20 @@ public class ColisService implements IColisservice {
 	        throw new IllegalArgumentException("Colis non trouvé pour l'ID : " + id);
 	    }
 	}
-	 public List<Colis> getColisAcceptes() {
-	        return cmdrep.findByAccepteeTrue();
+	public List<Colis> getColisAcceptes() {
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    List<Colis> colisList = new ArrayList<>(); // Déclaration en dehors de la condition
+	    if (authentication.getPrincipal() instanceof Transporteur) {
+	        Transporteur transporteur = (Transporteur) authentication.getPrincipal();
+	        List<AffectationColis> affectationColisList = affectationColisRepository.findByTransporteurAndColisList_AccepteeTrue(transporteur);
+	        for (AffectationColis affectationColis : affectationColisList) {
+	            colisList.addAll(affectationColis.getColisList());
+	        }
 	    }
+	    return colisList;
+	}
+
+
 	 public void supprimerColisParId(Long colisId) {
 		    // Récupérer l'affectation du colis pour le transporteur
 		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

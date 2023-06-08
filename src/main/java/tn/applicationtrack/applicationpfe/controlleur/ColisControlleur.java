@@ -106,8 +106,9 @@ public Colis accepterCommande(@PathVariable("id") Long id) {
 }
 
 @GetMapping("/getColsiAcceptes")
-public List<Colis> getColisAcceptes() {
-    return Commandserv.getColisAcceptes();
+public  List<Colis> retrieveColisAcceptes() {
+	return Commandserv.getColisAcceptes();
+   
 }
 @DeleteMapping("/colis/{colisId}")
 public ResponseEntity<String> supprimerColisPourTransporteur(@PathVariable Long colisId) {
