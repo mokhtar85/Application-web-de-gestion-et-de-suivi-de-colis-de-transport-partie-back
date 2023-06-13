@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -28,6 +29,9 @@ public class Admin implements UserDetails   {
 	private String userName;
 	@Enumerated(EnumType.STRING)
 	private Typerole roleAdmin;
+	 @OneToMany(mappedBy = "admin")
+	    private List<Notification> notifications;
+	
 	public Admin(String password, String email, String userName, Typerole roleAdmin) {
 		super();
 		this.password = password;

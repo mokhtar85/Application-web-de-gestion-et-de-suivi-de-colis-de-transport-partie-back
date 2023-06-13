@@ -38,6 +38,8 @@ public class Transporteur implements UserDetails  {
 	private String vehicleType;
 	@Enumerated(EnumType.STRING)
 	private Typerole Roletransporteur;
+	 @OneToMany(mappedBy = "transporteur")
+	    private List<Notification> notifications;
 	
     public String getConfirmPassword() {
 		return confirmPassword;

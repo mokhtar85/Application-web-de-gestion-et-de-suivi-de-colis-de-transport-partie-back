@@ -1,5 +1,6 @@
 package tn.applicationtrack.applicationpfe.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,11 +17,13 @@ import org.springframework.stereotype.Service;
 import tn.applicationtrack.applicationpfe.entities.AffectationColis;
 import tn.applicationtrack.applicationpfe.entities.Client;
 import tn.applicationtrack.applicationpfe.entities.Colis;
+import tn.applicationtrack.applicationpfe.entities.Notification;
 import tn.applicationtrack.applicationpfe.entities.Product;
 import tn.applicationtrack.applicationpfe.entities.Transporteur;
 import tn.applicationtrack.applicationpfe.repository.AffectationColisRepository;
 import tn.applicationtrack.applicationpfe.repository.Clientrreposiotry;
 import tn.applicationtrack.applicationpfe.repository.ColisRepository;
+import tn.applicationtrack.applicationpfe.repository.NotificationRepository;
 import tn.applicationtrack.applicationpfe.repository.ProduitRepository;
 @Service
 public class ColisService implements IColisservice {
@@ -32,6 +35,8 @@ public class ColisService implements IColisservice {
 	ProduitRepository productRep;
 	@Autowired
 	AffectationColisRepository affectationColisRepository;
+	@Autowired 
+	NotificationRepository notificationRepository;
 	public Colis addCommand(Colis cmd) {
 		// TODO Auto-generated method stub
 		return cmdrep.save(cmd);
@@ -120,23 +125,25 @@ public class ColisService implements IColisservice {
 	        }
 	        return new ArrayList<>();
 	}
+	
 	@Override
 	public Colis accepterCommande(Long id) {
-		// TODO Auto-generated method stub
-		Optional<Colis> optionalColis = cmdrep.findById(id);
+	    Optional<Colis> optionalColis = cmdrep.findById(id);
 
 	    if (optionalColis.isPresent()) {
 	        Colis colis = optionalColis.get();
-	        // Mettez à jour le champ "acceptee" du colis
 	        colis.setAcceptee(true);
+	        colis = cmdrep.save(colis);
 
-	        // Enregistrez le colis mis à jour dans la base de données
-	        return cmdrep.save(colis);
+	       
+
+	        return colis;
 	    } else {
-	        // Gérer le cas où le colis n'est pas trouvé
 	        throw new IllegalArgumentException("Colis non trouvé pour l'ID : " + id);
 	    }
 	}
+
+	
 	public List<Colis> getColisAcceptes() {
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    List<Colis> colisList = new ArrayList<>(); // Déclaration en dehors de la condition
@@ -151,25 +158,38 @@ public class ColisService implements IColisservice {
 	}
 
 
-	 public void supprimerColisParId(Long colisId) {
-		    // Récupérer l'affectation du colis pour le transporteur
-		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	        if (authentication.getPrincipal() instanceof Transporteur) {
-	            Transporteur transporteur = (Transporteur) authentication.getPrincipal();
-	            Long transporteurId = transporteur.getId_user();
-		    AffectationColis affectationColis = affectationColisRepository.findByTransporteurIdAndColisListId(transporteurId, colisId);
+	public void supprimerAffectationColisParId(Long colisId) {
+	    // Récupérer l'affectation du colis pour le transporteur
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    if (authentication.getPrincipal() instanceof Transporteur) {
+	        Transporteur transporteur = (Transporteur) authentication.getPrincipal();
+	        Long transporteurId = transporteur.getId_user();
 
-		    if (affectationColis != null) {
-		        // Supprimer le colis de la liste des colis de l'affectation
-		        List<Colis> colisList = affectationColis.getColisList();
-		        colisList.removeIf(colis -> colis.getIdCmd().equals(colisId));
+	        // Trouver l'affectation de colis du transporteur
+	        AffectationColis affectationColis = affectationColisRepository.findByTransporteurIdAndColisListId(transporteurId,colisId);
 
-		        // Enregistrer les modifications dans la base de données
-		        affectationColisRepository.save(affectationColis);
-		    }
-		}
-	 }
+	        if (affectationColis != null) {
+	            // Parcourir la liste des colis de l'affectation
+	            List<Colis> colisList = affectationColis.getColisList();
+	            colisList.removeIf(colis -> colis.getIdCmd().equals(colisId));
+
+	            // Vérifier si l'affectation de colis est vide après la suppression
+	            if (colisList.isEmpty()) {
+	                // Supprimer l'affectation de colis
+	                affectationColisRepository.delete(affectationColis);
+	            } else {
+	                // Mettre à jour la liste de colis de l'affectation
+	                affectationColis.setColisList(colisList);
+	                affectationColisRepository.save(affectationColis);
+	            }
+	        }
+	    }
+	}
+
+
 }
+	 
+
 
 	
 

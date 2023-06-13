@@ -16,7 +16,7 @@ import tn.applicationtrack.applicationpfe.entities.Transporteur;
 public interface AffectationColisRepository extends JpaRepository<AffectationColis, Long> {
 
 	@Query("SELECT ac FROM AffectationColis ac WHERE ac.transporteur.id_user = :transporteurId")
-	public List<AffectationColis> findAffectationColisByTransporteurId(@Param("transporteurId") Long transporteurId);
+	public AffectationColis findAffectationColisByTransporteurId(@Param("transporteurId") Long transporteurId);
 	 
 	@Query("SELECT ac FROM AffectationColis ac JOIN ac.colisList c WHERE ac.transporteur.id_user = :transporteurId AND c.idCmd = :colisId")
 	AffectationColis findByTransporteurIdAndColisListId(@Param("transporteurId") Long transporteurId, @Param("colisId") Long colisId);
@@ -26,8 +26,8 @@ public interface AffectationColisRepository extends JpaRepository<AffectationCol
 	@Query("SELECT ac FROM AffectationColis ac JOIN ac.colisList c WHERE ac.transporteur = :transporteur AND c.acceptee = false")
 	public List<AffectationColis> findByTransporteurAndColisList_AccepteeFalse(Transporteur transporteur);
 
-	
 
+	
 }
 	
 

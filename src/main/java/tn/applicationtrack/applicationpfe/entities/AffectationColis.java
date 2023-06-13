@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 
 @Entity
 @Table(name="affectation_colis")
@@ -34,7 +35,11 @@ public class AffectationColis {
 
 	@OneToMany
 	 @JsonManagedReference
-	 @JoinColumn(name = "affectation_id") // Spécifie la colonne de jointure
+	 @JoinTable(
+			    name = "affectation_colis_colis", // Nom de la table de jointure
+			    joinColumns = @JoinColumn(name = "affectation_id"), // Colonne de jointure de cette entité
+			    inverseJoinColumns = @JoinColumn(name = "idCmd") // Colonne de jointure de l'entité Colis
+			) // Spécifie la colonne de jointure
 	private List<Colis> colisList;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateAffectation;
