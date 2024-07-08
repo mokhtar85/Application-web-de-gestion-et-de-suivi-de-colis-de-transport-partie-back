@@ -1,5 +1,5 @@
 # Backend for Parcel Management and Real-Time Tracking Application
-This backend of the parcel management and real-time tracking application was developed during my end-of-study internship at Bee Coders. Built with Spring Boot, Java, and MySQL, it handles business logic, data persistence, and provides REST APIs for the frontend developed with Angular.
+This backend of the parcel management and real-time tracking application was developed during my end-of-study internship at Bee Coders. Built with Spring Boot, Java, and MySQL, it handles business logic, data persistence, and provides REST APIs for the frontend developed with Angular.the frontend is [here](https://github.com/mokhtar85/application-de-gestion-et-suivi-de-transport-de-colis-front)
 
 # Prerequisites
 Java 11 or higher,
