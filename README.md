@@ -2,8 +2,8 @@
 This backend of the parcel management and real-time tracking application was developed during my end-of-study internship at Bee Coders. Built with Spring Boot, Java, and MySQL, it handles business logic, data persistence, and provides REST APIs for the frontend developed with Angular.
 
 # Prerequisites
-Java 11 or higher
-Maven
+Java 11 or higher,
+Maven,
 MySQL Server
 # Installation and Configuration
 Clone the Repository
@@ -33,7 +33,6 @@ The REST API documentation can be accessed at http://localhost:8080/swagger-ui.h
 
 # Running Tests
 To run the unit tests, use:
-
-# mvn test
+ mvn test
 Further Help
 # For more help on Spring Boot, refer to the Spring Boot Reference Guide.
